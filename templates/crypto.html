@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='crypto_styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Encryption/Conversion</h2>
+
+        <form id="encryption-form" method="POST" action="{{ url_for('encryption.generate_encryption') }}">
+            <label for="algorithm">Choose Algorithm:</label>
+            <select id="algorithm" name="algorithm" required>
+                <option value="md5">MD5 Hash</option>
+                <option value="sha256">SHA256 Hash</option>
+                <option value="binary_convert">Text to Binary</option>
+                <option value="binary_decode">Binary to Text</option>
+                <option value="base64_encrypt">Base64 Encode</option>
+                <option value="base64_decrypt">Base64 Decode</option>
+                <option value="octal_convert">Text to Octal</option>
+                <option value="octal_decode">Octal to Text</option>
+            </select>
+
+            <label for="text">Text:</label>
+            <input type="text" id="text" name="text" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="result-container" class="result-container">
+            <h3>Result:</h3>
+            <p id="result-text">{{ result }}</p>
+            <p id="error-text" style="color: red;">{{ error }}</p>
+        </div>
+    </div>
+</body>
+</html>

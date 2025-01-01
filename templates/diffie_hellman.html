@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffie-Hellman Key Exchange</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='diffie_styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Diffie-Hellman Key Exchange</h1>
+        <form id="diffie-form">
+            <label for="p">Prime number p:</label>
+            <input type="number" id="p" name="p" required>
+
+            <label for="g">Primitive root g:</label>
+            <input type="number" id="g" name="g" required>
+
+            <label for="a">Private key a:</label>
+            <input type="number" id="a" name="a" required>
+
+            <label for="b">Private key b:</label>
+            <input type="number" id="b" name="b" required>
+
+            <button type="submit">Generate Diffie-Hellman Key</button>
+        </form>
+
+        <div id="result-container" class="result-container">
+            <h2>Generated Diffie-Hellman Steps</h2>
+            <pre id="result-text"></pre>
+            <button class="next-btn" id="next-btn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let steps = [];
+
+        // Handle form submission
+        document.getElementById('diffie-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let p = document.getElementById('p').value;
+            let g = document.getElementById('g').value;
+            let a = document.getElementById('a').value;
+            let b = document.getElementById('b').value;
+
+            fetch('/diffie_hellman/generate_diffie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `p=${p}&g=${g}&a=${a}&b=${b}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.steps) {
+                    steps = data.steps;
+                    document.getElementById('result-text').textContent = steps[currentStep];
+                    document.getElementById('result-container').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Handle "Next" button click
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                document.getElementById('result-text').textContent = steps[currentStep];
+            } else {
+                document.getElementById('next-btn').style.display = 'none';  // Hide "Next" button when all steps are displayed
+            }
+        });
+    </script>
+</body>
+</html>
